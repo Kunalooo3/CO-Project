@@ -71,3 +71,16 @@ def check_hlt(L,f):
     else:
         f.write("hlt not used as last instruction")
         exit()
+
+def check_flags(L2,f):
+    for i in range(0,len(L2)):                 
+        if 'flags' in L2[i]:
+            if (L2[i][0]=='ld' and L2[i][1]=='FLAGS'):
+                f.write("cannot load value to flags")
+                exit()
+            if ((L2[i][0]=='add') or(L2[i][0]=='sub') or(L2[i][0]=='mul') or(L2[i][0]=='div') and L2[i][1]=='FLAGS'):
+                f.write("invalid operation on flag")
+                exit()
+            if L2[i][0]=='mov' and L2[i][1]!='FLAGS':
+                f.write("invalid operation")
+                exit()
