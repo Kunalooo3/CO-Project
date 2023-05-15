@@ -131,3 +131,27 @@ c=0# c is line number
 variables,D=check_variable_declaration_beginning(L1,f_output)
 D_labels,label=check_label(L1,f_output)
 check_flags(L1,f_output)
+
+for i in L1:
+    if L1.index(i)==len(L1)-2:
+        c=c+1
+    if i[0]=="var":                         
+        continue
+    if i[0] not in mnemonics and i[0][:-1] in label:
+        i.pop(0)
+    if (i[0]=="mov"):
+        if ((i[2] in ['R0','R1','R2','R3','R4','R5','R6','FLAGS']) and (i[1] in  ['R0','R1','R2','R3','R4','R5','R6','FLAGS'])):
+            s1="00011"+"0"*5+registers[i[1]]+registers[i[2]]
+            #print(s1)
+            f_output.write(s1+"\n")
+            continue
+        if ((i[1] not in  ['R0','R1','R2','R3','R4','R5','R6','FLAGS']) and (i[2] not in ['R0','R1','R2','R3','R4','R5','R6','FLAGS'])):
+            s="line "+str(L1.index(i)-len(variables))
+            f_output.write("invalid name of register"+s)
+            exit()
+    if i[0] in mnemonics:
+        if (i[0]=="hlt"):
+            s1="11010"+"0"*11
+            #print(s1)
+            f_output.write(s1+"\n")
+            break
