@@ -107,3 +107,27 @@ syntax={
     "11111":{"mnemonic":"je","num_registers":0,"other":"mem_addr","type":"E"},
     "11010":{"mnemonic":"hlt","num_registers":0,"other":0,"type":"E"}
     }
+registers ={'R0':'000', 'R1':'001', 'R2':'010', 'R3':'011','R4':'100', 'R5':'101','R6':'110','FLAGS':'111'}
+
+
+                                          
+mnemonics=["add","sub","mul","div","mov","ld","st","rs","ls","xor","or","and","not","cmp","jmp","jgt","je","hlt","jlt"]
+flags={'V':0,'L':0,'G':0,'E':0}
+is_error=False
+
+
+
+with open('program.txt','r') as f:
+    s=f.read()
+    L=s.split('\n')
+f_output=open("machine_code.txt","w")#output file in same folder
+check_hlt(L,f_output)
+L1=[i.strip().split() for i in L if i!='']
+# print(L1)
+# print(L)
+
+semantics=[(i,syntax[i]["mnemonic"])for i in syntax.keys()]
+c=0# c is line number
+variables,D=check_variable_declaration_beginning(L1,f_output)
+D_labels,label=check_label(L1,f_output)
+check_flags(L1,f_output)
