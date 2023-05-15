@@ -183,3 +183,40 @@ for i in L1:
                 s="line no. "+str(L1.index(i)-len(variables))
                 f_output.write("cannot take input more than 7 bits"+s)
                 exit()
+                
+        if (syntax[i[0]]["mnemonic"]=="mov"and i[2] in ['R0','R1','R2','R3','R4','R5','R6','flag']):
+            s1="00011"+"0"*5+registers[i[1]]+registers[i[2]]
+        if (syntax[i[0]]["type"]=="B"):
+            v=bin(int(i[2][1:]))[2:]
+            if (len(v)==7):
+                s1=i[0]+"0"+registers[i[1]]+v                           
+            elif (len(v)<7):
+                v="0"*(7-len(v))+v
+                s1=i[0]+"0"+registers[i[1]]+v
+            else:
+                s="line no. "+str(L1.index(i)-len(variables))
+                f_output.write("cannot take input more than 7 bits"+s)
+                exit()
+        if (syntax[i[0]]["type"]=="C"):
+            if (((i[1]) in registers) and (i[2] in registers)):
+                s1=i[0]+"0"*5+registers[i[1]]+registers[i[2]]
+            else:
+                s="line "+str(L1.index(i)-len(variables))
+                f_output.write("invalid registers "+s)
+                exit()
+        if (syntax[i[0]]["type"]=="D"):
+            if i[2] not in variables:
+                s="line "+str(L1.index(i)-len(variables))
+                f_output.write("undeclared variable"+s)
+                exit()
+            else:
+                reg=i[1]
+                if reg in registers:
+                    if len(D[i[2]])==7:
+                        s1=i[0]+"0"+registers[i[1]]+D[i[2]]
+                    else:
+                        s1=i[0]+"0"+registers[i[1]]+"0"*(7-len(D[i[2]]))+D[i[2]]
+                else:
+                    s="line "+str(L1.index(i)-len(variables))
+                    f_output.write("invalid registers "+s)
+                    exit()
