@@ -1,3 +1,4 @@
+# This part checks the validation of the variables 
 def check_variable_declaration_beginning(L1,f):
     variable_number=1                                    
     flag=0
@@ -23,6 +24,7 @@ def check_variable_declaration_beginning(L1,f):
                 exit()
     D1={i:bin(D[i])[2:] for i in D.keys()}
     return variables,D1
+# This part of the code consists of the error handling
 
 def check_label(L,f):
     c=0        #line numbers                                   
@@ -85,6 +87,7 @@ def check_flags(L2,f):
                 f.write("invalid operation")
                 exit()
                 
+#dictionary for syntax              
 syntax={
     "00000":{"mnemonic":"add","num_registers":3,"other":0,"type":"A"},              
     "00001":{"mnemonic":"sub" ,"num_registers":3,"other":0,"type":"A"},
@@ -107,16 +110,17 @@ syntax={
     "11111":{"mnemonic":"je","num_registers":0,"other":"mem_addr","type":"E"},
     "11010":{"mnemonic":"hlt","num_registers":0,"other":0,"type":"E"}
     }
+#dictionary to map registers with their code
 registers ={'R0':'000', 'R1':'001', 'R2':'010', 'R3':'011','R4':'100', 'R5':'101','R6':'110','FLAGS':'111'}
 
 
-                                          
+#list of mnemonics,flags
 mnemonics=["add","sub","mul","div","mov","ld","st","rs","ls","xor","or","and","not","cmp","jmp","jgt","je","hlt","jlt"]
 flags={'V':0,'L':0,'G':0,'E':0}
 is_error=False
 
 
-
+# file opening instructions
 with open('program.txt','r') as f:
     s=f.read()
     L=s.split('\n')
@@ -132,6 +136,8 @@ variables,D=check_variable_declaration_beginning(L1,f_output)
 D_labels,label=check_label(L1,f_output)
 check_flags(L1,f_output)
 
+#Assembler starts from here
+#####################################################################################
 for i in L1:
     if L1.index(i)==len(L1)-2:
         c=c+1
@@ -238,3 +244,6 @@ for i in L1:
         s="line "+str(L1.index(i)-len(variables))
         f_output.write("typo in instruction "+s)
         exit()
+#Assembler ends here
+#####################################################################################
+      
