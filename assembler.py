@@ -155,3 +155,31 @@ for i in L1:
             #print(s1)
             f_output.write(s1+"\n")
             break
+            
+           #i[0]=syntax[i[0]]["mnemonic"]
+        for j in range(0,len(semantics)):
+            if (semantics[j][1]==i[0]):
+                i[0]=semantics[j][0]
+                break
+        if (syntax[i[0]]["type"]=="A"):#type A
+            # if ((registers[i[1]] in registers.keys()) and (registers[i[2]] in registers.keys()) and (registers[i[3]] in registers.keys())):
+            try:
+                s1=i[0]+"0"*2+registers[i[1]]+registers[i[2]]+registers[i[3]]
+            except:
+                f_output.write(f"invalid register name {L1.index(i)-len(variables)}")
+                exit()
+            # else:
+            #     s="line "+str(L1.index(i)-len(variables))
+            #     f_output.write("invalid register name "+s)
+            #     exit()
+        if (syntax[i[0]]["mnemonic"]=="mov"and i[2]  in variables):          
+            v=bin(int(i[2][1:]))[2:]
+            if (len(v)==7):
+                s1="00010"+"0"+registers[i[1]]+v
+            elif (len(v)<7):
+                v="0"*(7-len(v))+v
+                s1="00010"+"0"+registers[i[1]]+v
+            else:
+                s="line no. "+str(L1.index(i)-len(variables))
+                f_output.write("cannot take input more than 7 bits"+s)
+                exit()
