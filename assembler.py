@@ -1,6 +1,7 @@
+import sys
 # This part checks the validation of the variables
 
-def check_variable_declaration_beginning(L1,f):
+def check_variable_declaration_beginning(L1):
     variable_number=1                                    
     flag=0
     variables=[]
@@ -9,25 +10,25 @@ def check_variable_declaration_beginning(L1,f):
         if flag==0:
             if L1[i][0]=='var':
                 if len(L1[i])!=2:
-                    f.write("invalid use of variable ")
+                    print("invalid use of variable ")
                     exit()
                 if L1[i][1] in variables:
-                    f.write("same variable declared multiple times ")
+                    print("same variable declared multiple times ")
                     exit()
                 variables.append(L1[i][1])
-                D[L1[i][1]]=variable_number+i
+                D[L1[i][1]]=variable_number
                 variable_number=variable_number+1
             if L1[i][0]!='var':
                 flag=1
         else:
             if L1[i][0]=='var':
-                f.write("variable not declared in beginning")
+                print("variable not declared in beginning")
                 exit()
     D1={i:bin(D[i])[2:] for i in D.keys()}
     return variables,D1
 # This part of the code consists of the error handling
 
-def check_label(L,f):
+def check_label(L):
     c=0        #line numbers                                   
     labels=[]
     D={}
@@ -42,13 +43,13 @@ def check_label(L,f):
             #     print("error in line",c)
             #     raise SyntaxError("multiple definition for same label")
         if (i[0].count(":")>1):
-            f.write("invalid label name")
+            print("invalid label name")
             exit()
         c=c+1
     D_new={D[i]:bin(i)[2:] for i in D.keys()}
     return D_new,labels
 
-def check_hlt(L,f):                                    
+def check_hlt(L):                                    
     global is_error                                      
     c=0
     l=[]
@@ -64,28 +65,28 @@ def check_hlt(L,f):
                 if (j.strip()=='hlt'):
                     c=c+1
     if (c>1):
-        f.write("hlt used multiple times")
+        print("hlt used multiple times")
         exit()
     if (c==0):
-        f.write("hlt not used")
+        print("hlt not used")
         exit()
     if (l[-1].strip()=='hlt'):
         return None
     else:
-        f.write("hlt not used as last instruction")
+        print("hlt not used as last instruction")
         exit()
 
-def check_flags(L2,f):
+def check_flags(L2):
     for i in range(0,len(L2)):                 
         if 'flags' in L2[i]:
             if (L2[i][0]=='ld' and L2[i][1]=='FLAGS'):
-                f.write("cannot load value to flags")
+                print("cannot load value to flags")
                 exit()
             if ((L2[i][0]=='add') or(L2[i][0]=='sub') or(L2[i][0]=='mul') or(L2[i][0]=='div') and L2[i][1]=='FLAGS'):
-                f.write("invalid operation on flag")
+                print("invalid operation on flag")
                 exit()
             if L2[i][0]=='mov' and L2[i][1]!='FLAGS':
-                f.write("invalid operation")
+                print("invalid operation")
                 exit()
                 
 #dictionary for syntax
@@ -124,20 +125,27 @@ is_error=False
 
 # file opening instructions
 
-with open('program.txt','r') as f:
+'''with open('D:\\CO project\\CO_A_P1_Testing\\CO_A_P1\\Simple-Assembler\\program.txt','r') as f:
     s=f.read()
-    L=s.split('\n')
-f_output=open("machine_code.txt","w")#output file in same folder
-check_hlt(L,f_output)
+    L=s.split('\n')#output file in same folder'''
+s=sys.stdin.read()
+L=s.split("\n")
+check_hlt(L)
+for i in L:
+    count=i.count("\t")
+    s=list(i)
+    while count:
+        s.remove("\t")
+        count=count-1
+    i=''.join(s)
 L1=[i.strip().split() for i in L if i!='']
 # print(L1)
 # print(L)
-
 semantics=[(i,syntax[i]["mnemonic"])for i in syntax.keys()]
 c=0# c is line number
-variables,D=check_variable_declaration_beginning(L1,f_output)
-D_labels,label=check_label(L1,f_output)
-check_flags(L1,f_output)
+variables,D=check_variable_declaration_beginning(L1)
+D_labels,label=check_label(L1)
+check_flags(L1)
 
 ######################## Assembler starts from here ###################################
 
@@ -152,17 +160,17 @@ for i in L1:
         if ((i[2] in ['R0','R1','R2','R3','R4','R5','R6','FLAGS']) and (i[1] in  ['R0','R1','R2','R3','R4','R5','R6','FLAGS'])):
             s1="00011"+"0"*5+registers[i[1]]+registers[i[2]]
             #print(s1)
-            f_output.write(s1+"\n")
+            print(s1)
             continue
         if ((i[1] not in  ['R0','R1','R2','R3','R4','R5','R6','FLAGS']) and (i[2] not in ['R0','R1','R2','R3','R4','R5','R6','FLAGS'])):
             s="line "+str(L1.index(i)-len(variables))
-            f_output.write("invalid name of register"+s)
+            print("invalid name of register"+s)
             exit()
     if i[0] in mnemonics:
         if (i[0]=="hlt"):
             s1="11010"+"0"*11
             #print(s1)
-            f_output.write(s1+"\n")
+            print(s1)
             break
             
            #i[0]=syntax[i[0]]["mnemonic"]
@@ -175,7 +183,7 @@ for i in L1:
             try:
                 s1=i[0]+"0"*2+registers[i[1]]+registers[i[2]]+registers[i[3]]
             except:
-                f_output.write(f"invalid register name {L1.index(i)-len(variables)}")
+                print(f"invalid register name {L1.index(i)-len(variables)}")
                 exit()
             # else:
             #     s="line "+str(L1.index(i)-len(variables))
@@ -190,7 +198,7 @@ for i in L1:
                 s1="00010"+"0"+registers[i[1]]+v
             else:
                 s="line no. "+str(L1.index(i)-len(variables))
-                f_output.write("cannot take input more than 7 bits"+s)
+                print("cannot take input more than 7 bits"+s)
                 exit()
                 
         if (syntax[i[0]]["mnemonic"]=="mov"and i[2] in ['R0','R1','R2','R3','R4','R5','R6','flag']):
@@ -204,19 +212,19 @@ for i in L1:
                 s1=i[0]+"0"+registers[i[1]]+v
             else:
                 s="line no. "+str(L1.index(i)-len(variables))
-                f_output.write("cannot take input more than 7 bits"+s)
+                print("cannot take input more than 7 bits"+s)
                 exit()
         if (syntax[i[0]]["type"]=="C"):
             if (((i[1]) in registers) and (i[2] in registers)):
                 s1=i[0]+"0"*5+registers[i[1]]+registers[i[2]]
             else:
                 s="line "+str(L1.index(i)-len(variables))
-                f_output.write("invalid registers "+s)
+                print("invalid registers "+s)
                 exit()
         if (syntax[i[0]]["type"]=="D"):
             if i[2] not in variables:
                 s="line "+str(L1.index(i)-len(variables))
-                f_output.write("undeclared variable"+s)
+                print("undeclared variable"+s)
                 exit()
             else:
                 reg=i[1]
@@ -227,13 +235,13 @@ for i in L1:
                         s1=i[0]+"0"+registers[i[1]]+"0"*(7-len(D[i[2]]))+D[i[2]]
                 else:
                     s="line "+str(L1.index(i)-len(variables))
-                    f_output.write("invalid registers "+s)
+                    print("invalid registers "+s)
                     exit()
 
         if (syntax[i[0]]["type"]=="E"):
             if (i[1] not in D_labels):
                 s="line "+str(L1.index(i)-len(variables))
-                f_output.write("undeclared label "+s)
+                print("undeclared label "+s)
                 exit()
             if (len(D_labels[i[1]])==7):
                 s1=i[0]+"0"*4+D_labels[i[1]]                  
@@ -241,11 +249,11 @@ for i in L1:
                 s1=i[0]+"0"*4+"0"*(7-len(D_labels[i[1]]))+D_labels[i[1]]
         if (syntax[i[0]]["type"]=="F"):
             s1=i[0]+"0"*11
-        f_output.write(s1+"\n")
+        print(s1)
         c=c+1
     else:
         s="line "+str(L1.index(i)-len(variables))
-        f_output.write("typo in instruction "+s)
+        print("typo in instruction "+s)
         exit()
 ################################# Assembler ends here ######################################
 
