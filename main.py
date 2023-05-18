@@ -17,7 +17,7 @@ def check_variable_declaration_beginning(L1):
                     exit()
                 variables.append(L1[i][1])
                 D[L1[i][1]]=variable_number
-                variable_number=variable_number+1
+                variable_number=variable_number+i
             if L1[i][0]!='var':
                 flag=1
         else:
