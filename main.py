@@ -139,6 +139,9 @@ for i in L:
         count=count-1
     i=''.join(s)
 L1=[i.strip().split() for i in L if i!='']
+if (len(L1)>128):
+    print("error no lines exceeded 128")
+    exit()
 # print(L1)
 # print(L)
 semantics=[(i,syntax[i]["mnemonic"])for i in syntax.keys()]
