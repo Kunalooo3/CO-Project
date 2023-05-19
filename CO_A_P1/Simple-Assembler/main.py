@@ -1,3 +1,32 @@
+import sys
+# This part checks the validation of the variables
+def check_variable_declaration_beginning(L1):
+    variable_number=0                                    
+    flag=0
+    variables=[]
+    c=0
+#    D={}
+    for i in range(0,len(L1)):#i is line number
+        if flag==0:
+            if L1[i][0]=='var':
+                if len(L1[i])!=2:
+                    print("invalid use of variable ")
+                    exit()
+                if L1[i][1] in variables:
+                    print("same variable declared multiple times ")
+                    exit()
+                c=c+1
+                variables.append(L1[i][1])
+#                D[L1[i][1]]=variable_number+len(L1)
+                variable_number=variable_number+1
+            if L1[i][0]!='var':
+                flag=1
+        else:
+            if L1[i][0]=='var':
+                print("variable not declared in beginning")
+                exit()
+    # D1={i:bin(D[i])[2:] for i in D.keys()}
+    return variables,c
 syntax={
     "00000":{"mnemonic":"add","num_registers":3,"other":0,"type":"A"},               
     "00001":{"mnemonic":"sub" ,"num_registers":3,"other":0,"type":"A"},
