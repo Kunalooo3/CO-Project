@@ -74,6 +74,18 @@ def check_hlt(L):
     else:
         print("hlt not used as last instruction")
         exit()
+ def check_flags(L2):
+    for i in range(0,len(L2)):                 
+        if 'flags' in L2[i]:
+            if (L2[i][0]=='ld' and L2[i][1]=='FLAGS'):
+                print("cannot load value to flags")
+                exit()
+            if ((L2[i][0]=='add') or(L2[i][0]=='sub') or(L2[i][0]=='mul') or(L2[i][0]=='div') and L2[i][1]=='FLAGS'):
+                print("invalid operation on flag")
+                exit()
+            if L2[i][0]=='mov' and L2[i][1]!='FLAGS':
+                print("invalid operation")
+                exit()
  
 syntax={
     "00000":{"mnemonic":"add","num_registers":3,"other":0,"type":"A"},               
