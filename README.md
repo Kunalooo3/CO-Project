@@ -11,3 +11,4 @@ HARSH VISHWAKARMA - register, mnemonics, and file opening/closing instructions
 KUMAR MRINAL - dictionary for opcode syntaxes and enhancemect in code readability
 KUNAL - function for checking variable declaration at beginning and handeling of cases related to it
 
+Important Note: master branch is the main branch of this co project please ignore branch named 'main' inconvinience is regretted
