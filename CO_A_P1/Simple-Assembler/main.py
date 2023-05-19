@@ -141,3 +141,21 @@ for i in L1:
                     s="line "+str(L1.index(i)-len(variables))
                     print("invalid registers "+s)
                     exit()
+
+        if (syntax[i[0]]["type"]=="E"):
+            if (i[1] not in D_labels):
+                s="line "+str(L1.index(i)-len(variables))
+                print("undeclared label "+s)
+                exit()
+            if (len(D_labels[i[1]])==7):
+                s1=i[0]+"0"*4+D_labels[i[1]]                  
+            else:
+                s1=i[0]+"0"*4+"0"*(7-len(D_labels[i[1]]))+D_labels[i[1]]
+        if (syntax[i[0]]["type"]=="F"):
+            s1=i[0]+"0"*11
+        print(s1)
+        c=c+1
+    else:
+        s="line "+str(L1.index(i)-len(variables))
+        print("typo in instruction "+s)
+        exit()
