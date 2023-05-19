@@ -20,7 +20,38 @@ syntax={
     "11111":{"mnemonic":"je","num_registers":0,"other":"mem_addr","type":"E"},
     "11010":{"mnemonic":"hlt","num_registers":0,"other":0,"type":"E"}
     }
+#dictionary to map registers with their code
 
+registers ={'R0':'000', 'R1':'001', 'R2':'010', 'R3':'011','R4':'100', 'R5':'101','R6':'110','FLAGS':'111'}
+
+#list of mnemonics,flags
+
+mnemonics=["add","sub","mul","div","mov","ld","st","rs","ls","xor","or","and","not","cmp","jmp","jgt","je","hlt","jlt"]
+flags={'V':0,'L':0,'G':0,'E':0}
+is_error=False
+
+s=sys.stdin.read()
+L=s.split("\n")
+check_hlt(L)
+for i in L:
+    count=i.count("\t")
+    s=list(i)
+    while count:
+        s.remove("\t")
+        count=count-1
+    i=''.join(s)
+L1=[i.strip().split() for i in L if i!='']
+if (len(L1))>128:
+    print("error lines exceeded 128")
+    exit()
+# print(L1)
+# print(L)
+semantics=[(i,syntax[i]["mnemonic"])for i in syntax.keys()]
+c=0# c is line number
+variables,num=check_variable_declaration_beginning(L1)
+D_labels,label=check_label(L1)
+check_flags(L1)
+D=allocate_variable_address(L1,variables,num)
 for i in L1:
     if L1.index(i)==len(L1)-2:
         c=c+1
