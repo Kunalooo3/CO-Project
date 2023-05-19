@@ -82,7 +82,7 @@ def check_hlt(L):
     else:
         print("hlt not used as last instruction")
         exit()
- def check_flags(L2):
+def check_flags(L2):
     for i in range(0,len(L2)):                 
         if 'flags' in L2[i]:
             if (L2[i][0]=='ld' and L2[i][1]=='FLAGS'):
