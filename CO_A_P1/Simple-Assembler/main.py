@@ -28,6 +28,14 @@ def check_variable_declaration_beginning(L1):
     # D1={i:bin(D[i])[2:] for i in D.keys()}
     return variables,c
 
+def allocate_variable_address(L1,variables,c):
+    d={}
+    variable_number=1
+    for i in range(0,c):
+        d[L1[i][1]]=len(L1)+i-c
+    D={i:bin(d[i])[2:] for i in d.keys()}
+    return D
+
 def check_label(L):
     c=0        #line numbers                                   
     labels=[]
