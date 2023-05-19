@@ -163,7 +163,7 @@ for i in L1:
             print(s1)
             continue
         if ((i[1] not in  ['R0','R1','R2','R3','R4','R5','R6','FLAGS']) and (i[2] not in ['R0','R1','R2','R3','R4','R5','R6','FLAGS'])):
-            s="line "+str(L1.index(i)-len(variables))
+            s="line "+str(L1.index(i))
             print("invalid name of register"+s)
             exit()
     if i[0] in mnemonics:
@@ -184,7 +184,7 @@ for i in L1:
             try:
                 s1=i[0]+"0"*2+registers[i[1]]+registers[i[2]]+registers[i[3]]
             except:
-                print(f"invalid register name {L1.index(i)-len(variables)}")
+                print(f"invalid register name {L1.index(i)}")
                 exit()
             # else:
             #     s="line "+str(L1.index(i)-len(variables))
@@ -198,7 +198,7 @@ for i in L1:
                 v="0"*(7-len(v))+v
                 s1="00010"+"0"+registers[i[1]]+v
             else:
-                s="line no. "+str(L1.index(i)-len(variables))
+                s="line no. "+str(L1.index(i))
                 print("cannot take input more than 7 bits"+s)
                 exit()
 
@@ -212,19 +212,19 @@ for i in L1:
                 v="0"*(7-len(v))+v
                 s1=i[0]+"0"+registers[i[1]]+v
             else:
-                s="line no. "+str(L1.index(i)-len(variables))
+                s="line no. "+str(L1.index(i))
                 print("cannot take input more than 7 bits"+s)
                 exit()
         if (syntax[i[0]]["type"]=="C"):
             if (((i[1]) in registers) and (i[2] in registers)):
                 s1=i[0]+"0"*5+registers[i[1]]+registers[i[2]]
             else:
-                s="line "+str(L1.index(i)-len(variables))
+                s="line "+str(L1.index(i))
                 print("invalid registers "+s)
                 exit()
         if (syntax[i[0]]["type"]=="D"):
             if i[2] not in variables:
-                s="line "+str(L1.index(i)-len(variables))
+                s="line "+str(L1.index(i))
                 print("undeclared variable"+s)
                 exit()
             else:
@@ -235,13 +235,13 @@ for i in L1:
                     else:
                         s1=i[0]+"0"+registers[i[1]]+"0"*(7-len(D[i[2]]))+D[i[2]]
                 else:
-                    s="line "+str(L1.index(i)-len(variables))
+                    s="line "+str(L1.index(i))
                     print("invalid registers "+s)
                     exit()
 
         if (syntax[i[0]]["type"]=="E"):
             if (i[1] not in D_labels):
-                s="line "+str(L1.index(i)-len(variables))
+                s="line "+str(L1.index(i))
                 print("undeclared label "+s)
                 exit()
             if (len(D_labels[i[1]])==7):
@@ -253,6 +253,7 @@ for i in L1:
         print(s1)
         c=c+1
     else:
-        s="line "+str(L1.index(i)-len(variables))
+        s="line "+str(L1.index(i))
         print("typo in instruction "+s)
         exit()
+
