@@ -48,6 +48,33 @@ def check_label(L):
         c=c+1
     D_new={D[i]:bin(i)[2:] for i in D.keys()}
     return D_new,labels
+def check_hlt(L):                                    
+    global is_error                                      
+    c=0
+    l=[]
+    for i in range(0,len(L)):
+        if (":" not in L[i]):
+            if (L[i].strip()=='hlt'):
+                if (L[i]!=''):
+                    l.append(L[i])
+                    c=c+1
+        else:
+            l=[j for j in L[i].split(":")]
+            for j in l:
+                if (j.strip()=='hlt'):
+                    c=c+1
+    if (c>1):
+        print("hlt used multiple times")
+        exit()
+    if (c==0):
+        print("hlt not used")
+        exit()
+    if (l[-1].strip()=='hlt'):
+        return None
+    else:
+        print("hlt not used as last instruction")
+        exit()
+ 
 syntax={
     "00000":{"mnemonic":"add","num_registers":3,"other":0,"type":"A"},               
     "00001":{"mnemonic":"sub" ,"num_registers":3,"other":0,"type":"A"},
