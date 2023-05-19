@@ -27,6 +27,27 @@ def check_variable_declaration_beginning(L1):
                 exit()
     # D1={i:bin(D[i])[2:] for i in D.keys()}
     return variables,c
+
+def check_label(L):
+    c=0        #line numbers                                   
+    labels=[]
+    D={}
+    for i in L:
+        if i[0]=='var':
+            continue
+        if i[0].count(":")==1:
+            if i[0][:-1] not in labels:
+                labels.append(i[0][:-1])
+                D[c]=i[0][:-1]
+            # else:
+            #     print("error in line",c)
+            #     raise SyntaxError("multiple definition for same label")
+        if (i[0].count(":")>1):
+            print("invalid label name")
+            exit()
+        c=c+1
+    D_new={D[i]:bin(i)[2:] for i in D.keys()}
+    return D_new,labels
 syntax={
     "00000":{"mnemonic":"add","num_registers":3,"other":0,"type":"A"},               
     "00001":{"mnemonic":"sub" ,"num_registers":3,"other":0,"type":"A"},
