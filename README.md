@@ -8,8 +8,8 @@ KUNAL                                  CSSS                                20222
 
 CONTRIBUTION :
 
-HARSH RAWAT - function for checking Labels and hlt 
-HARSH VISHWAKARMA - register, mnemonics, and file opening/closing instructions
-KUMAR MRINAL - dictionary for opcode syntaxes and enhancemect in code readability
-KUNAL - function for checking variable declaration at beginning and handeling of cases related to it
+HARSH RAWAT - function for checking Labels and hlt ,decided outline for simulator,made a proper plan for completing this task(such that chances of error are minimised) and wrote simulator_current.py,implemented flags,type E and type D instructions.
+HARSH VISHWAKARMA - register, mnemonics, and file opening/closing instructions,decided and implemented entire Q3,movf,addf,subf instructions. 
+KUMAR MRINAL - dictionary for opcode syntaxes and enhancemect in code readability and verified and ran testcases and correct typos in implementation of flags in simulator. 
+KUNAL - function for checking variable declaration at beginning and handeling of cases related to it and implemented rest of instructions in simulator.
 Important Note: master branch is the main branch of this co project please ignore branch named 'main' inconvinience is regretted
