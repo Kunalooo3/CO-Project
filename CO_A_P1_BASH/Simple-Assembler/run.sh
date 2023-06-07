@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python main.py
+python main_added_floating_point.py
