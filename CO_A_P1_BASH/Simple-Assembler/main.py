@@ -28,6 +28,41 @@ def check_variable_declaration_beginning(L1):
     # D1={i:bin(D[i])[2:] for i in D.keys()}
     return variables,c
 
+def convert_float_to_binary(n):
+    n= abs(float(n))
+    w= int(n)
+    fraction= n- w
+    whole_binary = bin(w)[2:] 
+    fractional= ''
+    while fraction > 0:
+        fraction *= 2
+        bit = int(fraction)
+        fractional += str(bit)
+        fraction -= bit
+    binary_representation = str(whole_binary) + '.' + fractional
+    return binary_representation
+
+def binary_to_scientific(binary):
+    p=[]
+    for i in binary:
+        p.append(i)
+    for i in range(0,len(p)-1):
+        if p[i]==".":
+            ind=i
+            p.remove(".")
+    p.insert(1, ".")
+    e=ind-1
+    exponent_decimal=e+3
+    binary_exponent = format(exponent_decimal, '03b')
+    s=""
+    for i in p:
+        s=s+str(i)
+    x = s.split(".")
+    mantissa=str(x[1])+"0"*(5-len(x[1]))
+    ans=s+" X "+"10^"+str(e)
+    return (binary_exponent,mantissa)
+
+
 def allocate_variable_address(L1,variables,c):
     d={}
     variable_number=1
@@ -115,7 +150,10 @@ syntax={
     "11100":{"mnemonic":"jlt","num_registers":0,"other":"mem_addr","type":"E"},
     "11101":{"mnemonic":"jgt","num_registers":0,"other":"mem_addr","type":"E"},
     "11111":{"mnemonic":"je","num_registers":0,"other":"mem_addr","type":"E"},
-    "11010":{"mnemonic":"hlt","num_registers":0,"other":0,"type":"E"}
+    "11010":{"mnemonic":"hlt","num_registers":0,"other":0,"type":"E"},
+    "10000":{"mnemonic":"addf","num_registers":3,"other":0,"type":"A"},
+    "10001":{"mnemonic":"subf","num_registers":3,"other":0,"type":"A"},
+    "10010":{"mnemonic":"movf","num_registers":1,"other":0,"type":"B"}
     }
 #dictionary to map registers with their code
 
@@ -123,7 +161,7 @@ registers ={'R0':'000', 'R1':'001', 'R2':'010', 'R3':'011','R4':'100', 'R5':'101
 
 #list of mnemonics,flags
 
-mnemonics=["add","sub","mul","div","mov","ld","st","rs","ls","xor","or","and","not","cmp","jmp","jgt","je","hlt","jlt"]
+mnemonics=["add","sub","mul","div","mov","ld","st","rs","ls","xor","or","and","not","cmp","jmp","jgt","je","hlt","jlt","addf","subf","movf"]
 flags={'V':0,'L':0,'G':0,'E':0}
 is_error=False
 
@@ -163,7 +201,7 @@ for i in L1:
             print(s1)
             continue
         if ((i[1] not in  ['R0','R1','R2','R3','R4','R5','R6','FLAGS']) and (i[2] not in ['R0','R1','R2','R3','R4','R5','R6','FLAGS'])):
-            s="line "+str(L1.index(i))
+            s="line "+str(L1.index(i)-len(variables))
             print("invalid name of register"+s)
             exit()
     if i[0] in mnemonics:
@@ -184,7 +222,7 @@ for i in L1:
             try:
                 s1=i[0]+"0"*2+registers[i[1]]+registers[i[2]]+registers[i[3]]
             except:
-                print(f"invalid register name {L1.index(i)}")
+                print(f"invalid register name {L1.index(i)-len(variables)}")
                 exit()
             # else:
             #     s="line "+str(L1.index(i)-len(variables))
@@ -198,10 +236,24 @@ for i in L1:
                 v="0"*(7-len(v))+v
                 s1="00010"+"0"+registers[i[1]]+v
             else:
-                s="line no. "+str(L1.index(i))
+                s="line no. "+str(L1.index(i)-len(variables))
                 print("cannot take input more than 7 bits"+s)
                 exit()
 
+        if (syntax[i[0]]["mnemonic"]=="movf"): 
+            b=convert_float_to_binary(i[2][1:])
+            y=binary_to_scientific(b)
+            s=""
+            for j in y:
+                s=s+j
+            if (len(s)>8):
+                print("overflow")
+                exit()
+            else:
+                u=("0"*(8-len(s))+s)
+                s1="10010"+registers[i[1]]+u
+                print(s1)
+                continue
         if (syntax[i[0]]["mnemonic"]=="mov"and i[2] in ['R0','R1','R2','R3','R4','R5','R6','flag']):
             s1="00011"+"0"*5+registers[i[1]]+registers[i[2]]
         if (syntax[i[0]]["type"]=="B"):
@@ -212,19 +264,19 @@ for i in L1:
                 v="0"*(7-len(v))+v
                 s1=i[0]+"0"+registers[i[1]]+v
             else:
-                s="line no. "+str(L1.index(i))
+                s="line no. "+str(L1.index(i)-len(variables))
                 print("cannot take input more than 7 bits"+s)
                 exit()
         if (syntax[i[0]]["type"]=="C"):
             if (((i[1]) in registers) and (i[2] in registers)):
                 s1=i[0]+"0"*5+registers[i[1]]+registers[i[2]]
             else:
-                s="line "+str(L1.index(i))
+                s="line "+str(L1.index(i)-len(variables))
                 print("invalid registers "+s)
                 exit()
         if (syntax[i[0]]["type"]=="D"):
             if i[2] not in variables:
-                s="line "+str(L1.index(i))
+                s="line "+str(L1.index(i)-len(variables))
                 print("undeclared variable"+s)
                 exit()
             else:
@@ -235,13 +287,13 @@ for i in L1:
                     else:
                         s1=i[0]+"0"+registers[i[1]]+"0"*(7-len(D[i[2]]))+D[i[2]]
                 else:
-                    s="line "+str(L1.index(i))
+                    s="line "+str(L1.index(i)-len(variables))
                     print("invalid registers "+s)
                     exit()
 
         if (syntax[i[0]]["type"]=="E"):
             if (i[1] not in D_labels):
-                s="line "+str(L1.index(i))
+                s="line "+str(L1.index(i)-len(variables))
                 print("undeclared label "+s)
                 exit()
             if (len(D_labels[i[1]])==7):
@@ -253,7 +305,6 @@ for i in L1:
         print(s1)
         c=c+1
     else:
-        s="line "+str(L1.index(i))
+        s="line "+str(L1.index(i)-len(variables))
         print("typo in instruction "+s)
         exit()
-
