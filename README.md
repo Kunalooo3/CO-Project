@@ -12,4 +12,4 @@ HARSH RAWAT - function for checking Labels and hlt ,decided outline for simulato
 HARSH VISHWAKARMA - register, mnemonics, and file opening/closing instructions,decided and implemented entire Q3,movf,addf,subf instructions. 
 KUMAR MRINAL - dictionary for opcode syntaxes and enhancemect in code readability and verified and ran testcases and correct typos in implementation of flags in simulator. 
 KUNAL - function for checking variable declaration at beginning and handeling of cases related to it and implemented rest of instructions in simulator.
-Important Note: master branch is the main branch of this co project please ignore branch named 'main' inconvinience is regretted
+Important Note: master branch is the main branch of this co project please ignore branch named 'main' inconvinience is regretted and CO-Project-1 contains compatible files
