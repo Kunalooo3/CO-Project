@@ -1,0 +1,8 @@
+mov R1 $1
+and R1 R2 R3
+mov R2 $1
+and R1 R2 R3
+mov R3 $1
+and R1 R2 R3
+and R1 R2 R3
+hlt
