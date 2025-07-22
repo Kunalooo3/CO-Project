@@ -1,0 +1,9 @@
+var var2
+var var3
+ld           FLAGS var2
+                                                                        st                R3 var3
+sub R1                  R2 R6
+
+
+add                                      R1 R2 R3
+hlt
